@@ -75,7 +75,14 @@ function collectEnergy(){
     // var colorGreen = "#CDFF60";
     // var colorGreen = "#EAFDBB";
     // var pointEnergyBall=findColor(img,colorGreen,{ region: [0, 0, 800, 800],threshold: 10 });
-    var icon = images.read('energy_hand.jpg')
+    var date = new Date();
+    var hour = date.getHours();
+    if (hour < 18){
+        img_name = 'energy_hand.jpg';
+    } else {
+        img_name = 'energy_hand_night.jpg'
+    }
+    var icon = images.read(img_name);
     if (null === icon) {
         throw new Error("缺少图片文件");
     }
@@ -83,8 +90,8 @@ function collectEnergy(){
     while(pointEnergyBall){
         toast("发现能量球");
         toast(pointEnergyBall.x, pointEnergyBall.y);
-        click(pointEnergyBall.x,pointEnergyBall.y+20);
-        click(pointEnergyBall.x,pointEnergyBall.y+30);
+        click(pointEnergyBall.x-20,pointEnergyBall.y-20);
+        click(pointEnergyBall.x-30,pointEnergyBall.y-30);
         sleep(500);
         countTopLimit--;
         if(countTopLimit <= 0){
@@ -151,7 +158,11 @@ function collectFriendsEnergy(){
     }
 }
 
-unlock_device();
+while (!device.isScreenOn()) {
+    unlock_device();
+    device.wakeUp();
+    sleep(1000); // 等待屏幕亮起
+}
 launch_zfb();
 enter_forest();
 collectEnergy();
