@@ -36,7 +36,9 @@ function enter_forest() {
     if(text("蚂蚁森林").exists()){
         toast("进入蚂蚁森林");
         // text("蚂蚁森林").findOne().click();
-        click("蚂蚁森林");
+        /*有时在生活服务板块也会出现蚂蚁森林的文字，此时会错误地点了这个蚂蚁森林，还是改为固定位置比较靠谱*/
+        click(167, 486);
+        // click("蚂蚁森林");
         sleep(2500);
     }else{
         toast("找不到蚂蚁森林")
@@ -59,6 +61,20 @@ function thread_requestScreenCapture(){
     });
     if (!requestScreenCapture()) {
         throw new Error("请求截图失败");
+    }
+}
+
+
+function collectEnergy_blind_click(){ 
+    toast("下面开始收集能量");
+    /*个人页面没有偷取小手，颜色判断又容易错误，改为点击全部可能位置*/
+    var x_start = 200;
+    var y_start = 500;
+    for(x=200; x<=850; x+=50){
+        for(y=500; y<=800; y+=50){
+            click(x,y);
+            sleep(20);
+        }
     }
 }
 
@@ -117,6 +133,9 @@ function collectFriendsEnergy(){
         toast("查看更多好友");
         click("查看更多好友");
         sleep(2500);
+    } else {
+        toast("没有 查看更多好友");
+        exit()
     }
     sleep(1000);
 
@@ -165,5 +184,6 @@ while (!device.isScreenOn()) {
 }
 launch_zfb();
 enter_forest();
-collectEnergy();
+// collectEnergy();
+collectEnergy_blind_click()
 collectFriendsEnergy();
