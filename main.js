@@ -65,15 +65,23 @@ function thread_requestScreenCapture(){
 }
 
 
-function collectEnergy_blind_click(){ 
-    toast("下面开始收集能量");
+function collectEnergy_blind_click(){
+    thread_requestScreenCapture();
+    var img = captureScreen();
+    var colorGreen = "#C3FF60";
+    var pointEnergyBall=findColor(img,colorGreen,{ region: [0, 0, 800, 800],threshold: 10 });
+    toast("下面开始收集自己的能量");
     /*个人页面没有偷取小手，颜色判断又容易错误，改为点击全部可能位置*/
+    if(pointEnergyBall){
     var x_start = 200;
     var y_start = 500;
     for(x=200; x<=850; x+=50){
         for(y=500; y<=800; y+=50){
             click(x,y);
-            sleep(20);
+            sleep(5);
+            click(x,y);
+            sleep(5);
+            }
         }
     }
 }
@@ -94,7 +102,8 @@ function collectEnergy(){
     var date = new Date();
     var hour = date.getHours();
     if (hour < 18){
-        img_name = 'energy_hand.jpg';
+        img_name = 'keshouqu.png';
+        // img_name = 'energy_hand.jpg';
     } else {
         img_name = 'energy_hand_night.jpg'
     }
@@ -102,7 +111,7 @@ function collectEnergy(){
     if (null === icon) {
         throw new Error("缺少图片文件");
     }
-    var pointEnergyBall= images.findImage(img, icon, { threshold: 0.75 });
+    var pointEnergyBall= images.findImage(img, icon, { threshold: 0.7 });
     while(pointEnergyBall){
         toast("发现能量球");
         toast(pointEnergyBall.x, pointEnergyBall.y);
@@ -116,7 +125,7 @@ function collectEnergy(){
         }
         img = captureScreen();
         // pointEnergyBall=findColor(img,colorGreen,{ region: [0, 0, 800, 800],threshold: 10 });
-        pointEnergyBall= images.findImage(img, icon, { threshold: 0.75 });
+        pointEnergyBall= images.findImage(img, icon, { threshold: 0.7 });
 
     }
     toastLog("收集能量结束");
@@ -135,7 +144,7 @@ function collectFriendsEnergy(){
         sleep(2500);
     } else {
         toast("没有 查看更多好友");
-        exit()
+        back();
     }
     sleep(1000);
 
@@ -144,7 +153,7 @@ function collectFriendsEnergy(){
     var colorGreenHand="#1DA06D";
     var inviteFriendGreen = "#2EC06E";
 
-    var swipe_count = 20;
+    var swipe_count = 40;
     while(swipe_count){
         var img = captureScreen();
         var icon = images.read('friend_hand.jpg')
@@ -152,7 +161,7 @@ function collectFriendsEnergy(){
             throw new Error("缺少图片文件");
         }
         // var pointHand=findColor(img,colorGreenHand,{ region: [1000, 400],threshold: 10 });
-        var pointHand=findImage(img, icon, { threshold: 0.75 });
+        var pointHand=findImage(img, icon, { threshold: 0.8 });
 
         if(pointHand && text("好友排行榜").exists()){//找到绿色，包括手还有计时
             toastLog("找到了有能量的好友，开始偷能量");
@@ -166,11 +175,12 @@ function collectFriendsEnergy(){
             if(inviteFriendBox){
                 toastLog("到了好友列表的最后，退出好友排行榜");
                 // click(60,120);//点击返回到列表
-                sleep(1000);
+                sleep(500);
+                back();
                 break;
             }else{
-                swipe(500,1800,500,100,1000);//没有到结尾就翻页
-                sleep(1000);
+                swipe(500,900,500,100,1000);//没有到结尾就翻页
+                sleep(500);
             }
         }
         swipe_count--;
