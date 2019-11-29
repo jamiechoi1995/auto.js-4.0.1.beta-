@@ -163,7 +163,7 @@ function collectFriendsEnergy(){
         // var pointHand=findColor(img,colorGreenHand,{ region: [1000, 400],threshold: 10 });
         var pointHand=findImage(img, icon, { threshold: 0.8 });
 
-        if(pointHand && text("好友排行榜").exists()){//找到绿色，包括手还有计时
+        if(pointHand && text("周排行榜").exists()){//找到绿色，包括手还有计时
             toastLog("找到了有能量的好友，开始偷能量");
             click(pointHand.x,pointHand.y+50);
             sleep(2500);
